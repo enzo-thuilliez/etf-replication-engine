@@ -1,0 +1,59 @@
+{
+  "git.autofetch": true,
+  "workbench.activityBar.location": "top",
+  "workbench.sideBar.location": "left",
+  "workbench.secondarySideBar.defaultVisibility": "visible",
+  "workbench.list.compact": true,
+  "editor.fontFamily": "JetBrains Mono, Cascadia Code, Consolas, monospace",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 22,
+  "editor.fontLigatures": true,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.minimap.enabled": false,
+  "breadcrumbs.enabled": false,
+  "window.menuBarVisibility": "hidden",
+  "workbench.layoutControl.enabled": false,
+  "editor.stickyScroll.enabled": false,
+  "editor.renderWhitespace": "selection",
+  "window.commandCenter": true,
+  "workbench.startupEditor": "none",
+  "explorer.compactFolders": true,
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
+  "workbench.iconTheme": "vs-seti",
+  "window.zoomLevel": 0,
+  "chatgpt.followUpQueueMode": "queue",
+  "chat.viewSessions.orientation": "stacked",
+  "claudeCode.preferredLocation": "panel",
+  "makefile.configureOnOpen": true,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.linkedProjects": ["./Cargo.toml"],
+
+  "python.defaultInterpreterPath": ".venv/bin/python",
+  "python.analysis.extraPaths": ["src"],
+  "ruff.nativeServer": true,
+
+  "eslint.workingDirectories": ["web"],
+
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

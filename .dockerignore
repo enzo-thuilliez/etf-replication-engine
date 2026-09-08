@@ -1,0 +1,35 @@
+# Rust
+target/
+**/target/
+
+# Python
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.deepeval/
+
+# Node / web
+web/node_modules/
+web/dist/
+node_modules/
+
+# Local data & dev artifacts
+data/
+db/
+notebook/
+.ipynb_checkpoints/
+
+# VCS / env / editor
+.git/
+.gitignore
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+
+# Docs (not needed inside images)
+docs/
+*.md

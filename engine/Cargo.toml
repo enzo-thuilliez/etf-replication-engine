@@ -1,0 +1,19 @@
+[package]
+name = "engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core optimization engine: index-replication basket optimization, tracking-error computation, and rebalance simulation under transaction-cost constraints."
+
+[lib]
+name = "engine"
+path = "src/lib.rs"
+
+# Optional dev/debug binary entrypoint (`make run-engine` / `cargo run -p engine`).
+[[bin]]
+name = "engine"
+path = "src/main.rs"
+
+[dependencies]
+# TODO: add once optimization logic lands — see PROJECT.md and docs/SPECS.md (forthcoming).
+# good_lp = { version = "1", features = ["highs"] }
