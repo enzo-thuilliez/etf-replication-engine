@@ -119,7 +119,7 @@ documentation are in place; no optimization logic, MCP tools, or agent behavior 
 yet. See [AGENTS.md](AGENTS.md) for the interface contract the engine/MCP/agent layers are being
 built towards.
 
-A detailed, phased roadmap will live in `ROADMAP.md` (coming soon). At a high level, the plan is:
+See [ROADMAP.md](ROADMAP.md) for the detailed, phased plan. At a high level:
 
 1. Core engine: basket optimization + tracking-error computation (no MCP/UI yet)
 2. MCP server exposing the engine as tools, with a minimal axum API
@@ -129,4 +129,4 @@ A detailed, phased roadmap will live in `ROADMAP.md` (coming soon). At a high le
 
 ## License
 
-MIT — see [LICENSE](LICENSE) (to be added).
+MIT — see [LICENSE](LICENSE).
