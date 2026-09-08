@@ -1,0 +1,43 @@
+# --- Rust ---
+/target/
+**/target/
+Cargo.lock.bak
+
+# --- Python (uv) ---
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.deepeval/
+.deepeval_cache.json
+
+# --- Node / web ---
+web/node_modules/
+web/dist/
+web/.vite/
+node_modules/
+
+# --- Local data & databases ---
+data/*
+!data/.gitkeep
+db/*.sqlite
+db/*.sqlite3
+db/*.db
+!db/.gitkeep
+
+# --- Env / secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Editor / OS ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+
+# --- Notebooks ---
+.ipynb_checkpoints/

@@ -1,0 +1,38 @@
+# Docker/Compose orchestration is intentionally NOT active during the MVP phase.
+#
+# Rationale: while the engine and MCP server are still under active development, running
+# `cargo run` / `npm run dev` / `uv run` directly is faster to iterate with than rebuilding
+# images on every change, and there's no deployment target yet that requires containerization.
+# This file is a placeholder for the post-MVP productionization phase — see the roadmap
+# referenced in README.md.
+#
+# Uncomment and fill in service definitions once each component is implemented.
+
+# version: "3.9"
+#
+# services:
+#   mcp-server:
+#     build:
+#       context: .
+#       dockerfile: mcp-server/Dockerfile
+#     ports:
+#       - "8787:8787"
+#     env_file: .env
+#     volumes:
+#       - ./db:/app/db
+#
+#   web:
+#     build:
+#       context: ./web
+#     ports:
+#       - "5173:5173"
+#     depends_on:
+#       - mcp-server
+#
+#   agent:
+#     build:
+#       context: .
+#       dockerfile: src/agent/Dockerfile
+#     env_file: .env
+#     depends_on:
+#       - mcp-server

@@ -1,0 +1,19 @@
+[package]
+name = "mcp-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "MCP server exposing the replication engine as LLM-callable tools, plus an axum web API for the dashboard."
+
+[[bin]]
+name = "mcp-server"
+path = "src/main.rs"
+
+[dependencies]
+engine = { path = "../engine" }
+
+# TODO: add once the MCP tool contract (AGENTS.md) is implemented.
+# rmcp = "0"
+# axum = "0"
+# tokio = { version = "1", features = ["full"] }
+# serde = { version = "1", features = ["derive"] }
