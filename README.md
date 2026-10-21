@@ -1,132 +1,89 @@
-# ETF Index Replication & Rebalancing Engine
+# ETF Replication Engine
 
-A Rust engine that solves the core computational problem behind ETF indexing: building and
-rebalancing a security basket that tracks a benchmark index as closely as possible while
-minimizing transaction costs. The engine is exposed as [MCP](https://modelcontextprotocol.io)
-tools that an LLM agent can call, with a React dashboard for visualizing the basket, tracking
-error, and simulated rebalancing costs.
+**Track an index with fewer trades. A Rust optimizer, driven by an LLM agent over MCP.**
 
-> **Status: early stage.** This repository currently contains the project scaffolding
-> (workspace layout, tooling, CI, documentation) and no business logic yet. See
-> [Status & roadmap](#status--roadmap) below.
+[![CI](https://github.com/enzo-thuilliez/etf-replication-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/enzo-thuilliez/etf-replication-engine/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Why this project
+An ETF has to hold a basket that behaves like its benchmark index. Holding every constituent
+at exact weight is expensive, and every rebalance costs money in spreads and commissions. The
+engine finds the basket that tracks the index as closely as possible for the least trading,
+and an agent lets you ask for it in plain language: *"rebalance against the new weights, keep
+turnover under 5%, what does it cost me in tracking error?"*
 
-I'm an AI Engineering intern on the ETF, Indexing & Smart Beta team at Amundi, where I build
-LLM tool-calling agents over market data and production RAG pipelines. This project is an
-independent, from-scratch exploration of the same kind of problem — index replication and
-rebalancing under real-world constraints — built with my own data, algorithms, and code (no
-proprietary information, data, or logic from my employer).
+> **Status:** scaffolding. Workspace, CI and specs are in place; the optimizer, MCP tools and
+> agent are not built yet. See [ROADMAP.md](ROADMAP.md).
 
-The angle is deliberate: **Rust (performance, memory safety) + agentic AI (MCP tool-calling) +
-quantitative finance (ETF/indexing)**. It's a combination that mirrors the kind of system I work
-on daily, aimed at AI Engineer roles in asset management and quant finance.
+## What it does
 
-For the domain background — what index replication and tracking error actually mean, and why
-basket optimization under transaction costs is a non-trivial problem — see [PROJECT.md](PROJECT.md).
+- **Basket optimization.** Pick holdings and weights that minimize tracking error under
+  constraints: max positions, turnover budget, weight bounds.
+- **Tracking error.** Measure how far a basket drifts from its benchmark.
+- **Rebalance simulation.** Compare the trades, cost and tracking error of a rebalance before
+  making it.
+- **Agent interface.** The same functions are exposed as MCP tools, so an LLM agent can call,
+  combine and explain them.
+- **Dashboard.** A React UI for the basket, tracking error and rebalance costs.
 
-## Architecture
+The domain problem is laid out in [PROJECT.md](PROJECT.md). The tool contract is in
+[AGENTS.md](AGENTS.md).
 
-```
-etf-replication-engine/
-├── engine/            # Rust crate — optimization engine (good_lp / HiGHS solver)
-├── mcp-server/        # Rust crate — MCP server (rmcp) + axum web API over the engine
-├── web/                # React + TypeScript (Vite) dashboard and agent chat panel
-├── src/agent/          # Python package — LangChain + Azure OpenAI agent, consumes the MCP server
-├── eval/               # Agent evaluation (deepeval / ragas) — phase 2+
-├── scripts/llm/        # Utility scripts, incl. LLM-calling eval scripts
-├── notebook/           # Jupyter notebooks for exploration and prototyping
-├── data/               # Local test/dev datasets (gitignored contents)
-├── db/                 # Local SQLite dev databases (gitignored contents)
-├── docs/               # Architecture notes and technical specs
-├── tests/              # Cross-stack integration tests + Python tests
-├── .github/workflows/   # CI: Rust / Python / Node lint, build, test
-└── Cargo.toml          # Rust workspace root (members: engine, mcp-server)
+## How it works
+
+```text
+  LLM agent ──── MCP ────┐
+  (Python)               ▼
+                     mcp-server ───► engine
+                    (rmcp + axum)    (Rust, good_lp / HiGHS)
+                         ▲
+  Web dashboard ─ HTTP ──┘
+  (React)
 ```
 
-**Data flow (target architecture):**
+1. `engine` is a pure Rust library holding all the optimization logic, solved as an LP/MIP
+   with HiGHS.
+2. `mcp-server` exposes the engine twice, as MCP tools for the agent and as an HTTP API for
+   the dashboard. Both paths call the same functions.
+3. The agent (LangChain + Azure OpenAI) and the dashboard are thin clients on top.
 
-```
-┌─────────────┐        MCP (tool calls)        ┌────────────────┐
-│  LLM Agent   │ ─────────────────────────────▶ │   mcp-server    │
-│ (src/agent,  │ ◀───────────────────────────── │  (rmcp + axum)  │
-│  LangChain)  │                                 └────────┬────────┘
-└─────────────┘                                            │ in-process
-       ▲                                                    ▼
-       │ HTTP                                        ┌────────────┐
-       │                                              │   engine    │
-┌─────────────┐        HTTP (axum API)                │ (good_lp /  │
-│  web (React) │ ─────────────────────────────────────▶│   HiGHS)    │
-│  dashboard   │                                        └────────────┘
-└─────────────┘
-```
+More in [docs/architecture.md](docs/architecture.md) and [docs/SPECS.md](docs/SPECS.md).
 
-The `engine` crate is the single source of truth for optimization logic. Both the MCP server and
-the axum web API call into it directly — no duplicated logic between the agent-facing and
-UI-facing paths.
+## Stack
 
-## Tech stack
+| Layer | Tech |
+| --- | --- |
+| Optimizer | Rust, [`good_lp`](https://crates.io/crates/good_lp) + HiGHS |
+| Tool server | Rust, [`rmcp`](https://github.com/modelcontextprotocol/rust-sdk), [`axum`](https://github.com/tokio-rs/axum) |
+| Dashboard | React, TypeScript, Vite; types generated from Rust |
+| Agent | Python, LangChain, Azure OpenAI, [`uv`](https://docs.astral.sh/uv/) |
+| Evaluation | [`deepeval`](https://github.com/confident-ai/deepeval), [`ragas`](https://github.com/explodinggradients/ragas) |
 
-| Layer | Technology |
-|---|---|
-| Optimization engine | Rust, [`good_lp`](https://crates.io/crates/good_lp) with the HiGHS solver |
-| MCP tool server | Rust, [`rmcp`](https://github.com/modelcontextprotocol/rust-sdk) (official MCP Rust SDK) |
-| Web API | Rust, [`axum`](https://github.com/tokio-rs/axum), sharing the engine in-process |
-| Frontend | React + TypeScript, [Vite](https://vitejs.dev) |
-| Rust ↔ TS type sharing | [`ts-rs`](https://crates.io/crates/ts-rs) / [`typeshare`](https://github.com/1Password/typeshare) |
-| Agent orchestration | Python (src-layout), [LangChain](https://www.langchain.com) + Azure OpenAI, managed with [`uv`](https://docs.astral.sh/uv/) |
-| Agent evaluation | [`deepeval`](https://github.com/confident-ai/deepeval) / [`ragas`](https://github.com/explodinggradients/ragas) |
-| CI | GitHub Actions (Rust, Python, Node lint/build/test) |
+## Development
 
-Docker/Compose orchestration is intentionally deferred to a post-MVP productionization phase —
-see [docker-compose.yml](docker-compose.yml) for the (inactive) skeleton and rationale.
+Requires Rust stable, Node 22 with pnpm, and Python 3.11+ with `uv`.
 
-## Running locally
-
-> These commands describe the intended workflow. Since the engine and agent contain no logic
-> yet, `run-engine` / `run-mcp` / `run-agent` are placeholders until the corresponding phases
-> land.
-
-**Prerequisites:** Rust (stable, via `rustup`), Node.js 20+, Python 3.11+ with
-[`uv`](https://docs.astral.sh/uv/) installed.
-
-```bash
-# Rust workspace (engine + mcp-server)
-cargo build
-cargo test
-
-# Web dashboard
-cd web
-npm install
-npm run dev
-
-# Python agent
-uv sync
-uv run python -m agent   # placeholder entrypoint
-
-# Or via the Makefile
-make build
-make test
-make run-web
+```sh
+make build      # cargo build --workspace
+make test       # Rust + Python tests
+make lint       # clippy, rustfmt, ruff, eslint
+make run-mcp    # MCP server + HTTP API
+make run-web    # dashboard dev server
+make run-agent  # agent
 ```
 
-See [Makefile](Makefile) for the full list of targets.
+`make help` lists every target.
 
-## Status & roadmap
+## Repository layout
 
-This repository is at the **scaffolding stage**: workspace layout, CI, tooling, and domain
-documentation are in place; no optimization logic, MCP tools, or agent behavior are implemented
-yet. See [AGENTS.md](AGENTS.md) for the interface contract the engine/MCP/agent layers are being
-built towards.
-
-See [ROADMAP.md](ROADMAP.md) for the detailed, phased plan. At a high level:
-
-1. Core engine: basket optimization + tracking-error computation (no MCP/UI yet)
-2. MCP server exposing the engine as tools, with a minimal axum API
-3. Web dashboard consuming the API
-4. LangChain agent consuming the MCP server, with evaluation harness
-5. Post-MVP: Dockerized deployment, WASM build of the engine for in-browser recalculation
+```text
+engine/        Rust: optimization library
+mcp-server/    Rust: MCP tools + HTTP API over the engine
+web/           React dashboard
+src/agent/     Python agent (MCP client)
+eval/          agent evaluation
+docs/          architecture and specs
+```
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+[MIT](LICENSE)
