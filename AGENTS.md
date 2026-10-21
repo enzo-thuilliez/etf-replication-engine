@@ -7,6 +7,10 @@ same expectations. See [PROJECT.md](PROJECT.md) for the domain background behind
 
 > Status: contract only. No tool below is implemented yet.
 
+**Language:** everything in this repository is written in English — docs, code, comments,
+docstrings, commit messages, tool descriptions, and error messages. This holds even when the
+person asking for the change writes in another language.
+
 ## Design principles
 
 1. **Tools are the only source of numbers.** The agent must never compute, estimate, or restate

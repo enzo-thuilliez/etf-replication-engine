@@ -1,3 +1,3 @@
 def test_placeholder():
-    """Placeholder — à remplacer une fois la logique de l'agent Python testable."""
+    """Placeholder — replace once the Python agent has testable logic."""
     assert True

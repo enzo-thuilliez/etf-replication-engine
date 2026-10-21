@@ -4,104 +4,104 @@ Phased plan for this project. Each phase has one objective, concrete deliverable
 For *what* each layer should do once built, see [AGENTS.md](AGENTS.md) (tool contract) and
 [docs/SPECS.md](docs/SPECS.md) (v0 technical design, referenced explicitly in Phase 1).
 
-**Status legend:** ✅ Terminé · 🚧 En cours · ⬜ À faire
+**Status legend:** ✅ Done · 🚧 In progress · ⬜ To do
 
-## Phase 0 — Environnement & setup
+## Phase 0 — Environment & setup
 
-**Objectif :** mettre en place l'environnement de dev et la structure du repo pour pouvoir
-commencer à coder sans friction.
+**Objective:** set up the dev environment and repo structure so coding can start without
+friction.
 
-- [x] Toolchain Rust (rustup, cargo, clippy, rustfmt) fonctionnelle sous WSL
-- [x] Toolchain Python (`uv`) et Node installées
-- [x] Cargo workspace (`engine` + `mcp-server`) qui compile (`cargo build --workspace`)
-- [x] Scaffold complet : arborescence des dossiers, README.md, PROJECT.md, AGENTS.md, CLAUDE.md
-- [x] CI GitHub Actions en place (lint/build/test Rust + Python + Node)
-- [x] `.pre-commit-config.yaml` configuré (cargo fmt/clippy, ruff, eslint/prettier)
-- [x] Licence MIT (`LICENSE`)
+- [x] Rust toolchain (rustup, cargo, clippy, rustfmt) working under WSL
+- [x] Python (`uv`) and Node toolchains installed
+- [x] Cargo workspace (`engine` + `mcp-server`) that compiles (`cargo build --workspace`)
+- [x] Full scaffold: directory tree, README.md, PROJECT.md, AGENTS.md, CLAUDE.md
+- [x] GitHub Actions CI in place (Rust + Python + Node lint/build/test)
+- [x] `.pre-commit-config.yaml` configured (cargo fmt/clippy, ruff, eslint/prettier)
+- [x] MIT license (`LICENSE`)
 
-**Statut : ✅ Terminé**
+**Status: ✅ Done**
 
-## Phase 1 — MVP moteur + MCP server
+## Phase 1 — Engine + MCP server MVP
 
-**Objectif :** un moteur d'optimisation fonctionnel, exposé via les 3 tools MCP, testable depuis
-MCP Inspector et Claude Desktop — sur le périmètre v0 strictement défini dans
-[docs/SPECS.md](docs/SPECS.md). C'est la phase la plus à risque de dérive de scope : le but est
-un MVP livrable en **quelques jours, pas plus**. Tout ce qui n'est pas listé ci-dessous appartient
-à une phase suivante ou à `docs/SPECS.md` §5 (hors scope v0) — pas à Phase 1.
+**Objective:** a working optimization engine, exposed through the 3 MCP tools, testable from
+MCP Inspector and Claude Desktop — within the v0 scope strictly defined in
+[docs/SPECS.md](docs/SPECS.md). This is the phase most at risk of scope creep: the goal is an MVP
+shippable in **a few days, no more**. Anything not listed below belongs to a later phase or to
+`docs/SPECS.md` §5 (out of v0 scope) — not to Phase 1.
 
-- [ ] Modèle de données (`engine/src/model.rs`) : `Security`, `Index`, `Basket`, `Constraints`,
-      `Trade`, `ToolError`, conformes à docs/SPECS.md §1
-- [ ] Jeu de données v0 : 30 tickers réels + secteurs + poids d'indice illustratifs (CSV dans
-      `data/`), générateur de rendements synthétiques à seed fixe (docs/SPECS.md §3)
-- [ ] `optimize_basket` : LP via `good_lp` + HiGHS (proxy L1, cf. docs/SPECS.md §4), avec support
-      MIP pour `max_positions` quand la cardinalité est contrainte
-- [ ] `compute_tracking_error` : calcul de la TE réelle (écart-type annualisé) depuis les
-      rendements synthétiques + décomposition par secteur
-- [ ] `simulate_rebalance` : liste de trades, coût total, turnover, depuis un panier courant et
-      un panier cible
-- [ ] Tests unitaires (`engine/tests/`) : au moins un cas faisable, un cas infaisable
-      (`optimize_basket`), un calcul de TE de sanity check, un calcul de coût/turnover
-- [ ] `mcp-server` : les 3 tools exposés via `rmcp`, schémas conformes à docs/SPECS.md §2
-- [ ] Route(s) `axum` minimales exposant les mêmes 3 opérations en HTTP (sans authentification —
-      juste assez pour que la Phase 2 puisse s'y brancher, pas une conception d'API complète)
-- [ ] Validation manuelle : les 3 tools s'appellent et répondent correctement via **MCP
-      Inspector**, et via une config **Claude Desktop** pointant sur `mcp-server`
+- [ ] Data model (`engine/src/model.rs`): `Security`, `Index`, `Basket`, `Constraints`,
+      `Trade`, `ToolError`, matching docs/SPECS.md §1
+- [ ] v0 dataset: 30 real tickers + sectors + illustrative index weights (CSV in `data/`),
+      fixed-seed synthetic returns generator (docs/SPECS.md §3)
+- [ ] `optimize_basket`: LP via `good_lp` + HiGHS (L1 proxy, see docs/SPECS.md §4), with MIP
+      support for `max_positions` when cardinality is constrained
+- [ ] `compute_tracking_error`: actual TE (annualized standard deviation) from the synthetic
+      returns + sector decomposition
+- [ ] `simulate_rebalance`: trade list, total cost, turnover, from a current basket and a target
+      basket
+- [ ] Unit tests (`engine/tests/`): at least one feasible case, one infeasible case
+      (`optimize_basket`), a sanity-check TE computation, a cost/turnover computation
+- [ ] `mcp-server`: the 3 tools exposed via `rmcp`, schemas matching docs/SPECS.md §2
+- [ ] Minimal `axum` route(s) exposing the same 3 operations over HTTP (no authentication — just
+      enough for Phase 2 to plug into, not a full API design)
+- [ ] Manual validation: the 3 tools can be called and respond correctly via **MCP Inspector**,
+      and via a **Claude Desktop** config pointing at `mcp-server`
 
-Explicitement hors de cette phase : dashboard web, agent, persistance (`db/`), Docker — voir
-docs/SPECS.md §5 pour la liste complète et le pourquoi de chaque exclusion.
+Explicitly out of this phase: web dashboard, agent, persistence (`db/`), Docker — see
+docs/SPECS.md §5 for the full list and the reasoning behind each exclusion.
 
-**Statut : ⬜ À faire**
+**Status: ⬜ To do**
 
 ## Phase 2 — Frontend
 
-**Objectif :** dashboard React/TS connecté à l'API `axum`, visualisant la composition du panier
-et la tracking error.
+**Objective:** React/TS dashboard connected to the `axum` API, visualizing basket composition
+and tracking error.
 
-- [ ] Génération des types TS depuis les structs Rust (`ts-rs`/`typeshare`) dans `web/src/types`
-- [ ] Vue composition du panier (table/chart, poids panier vs poids indice)
-- [ ] Affichage de la tracking error + décomposition sectorielle
-- [ ] UI pour déclencher `optimize_basket` / `simulate_rebalance` contre l'API `mcp-server` et
-      afficher les résultats
-- [ ] Coquille du panneau de chat en place (branché à l'agent en Phase 3, pas avant)
+- [ ] TS types generated from the Rust structs (`ts-rs`/`typeshare`) into `web/src/types`
+- [ ] Basket composition view (table/chart, basket weights vs index weights)
+- [ ] Tracking error display + sector decomposition
+- [ ] UI to trigger `optimize_basket` / `simulate_rebalance` against the `mcp-server` API and
+      display the results
+- [ ] Chat panel shell in place (wired to the agent in Phase 3, not before)
 
-**Statut : ⬜ À faire**
+**Status: ⬜ To do**
 
 ## Phase 3 — Agent
 
-**Objectif :** agent LangChain + Azure OpenAI consommant le serveur MCP, avec des premiers
-scénarios d'usage end-to-end.
+**Objective:** LangChain + Azure OpenAI agent consuming the MCP server, with first end-to-end
+usage scenarios.
 
-- [ ] Implémentation `src/agent/` : agent LangChain, client MCP, configuration Azure OpenAI
-- [ ] L'agent respecte le contrat de comportement d'AGENTS.md (ancrage sur les tool calls,
-      questions de clarification, remontée fidèle des erreurs de tool)
-- [ ] Panneau de chat de `web/` branché à l'agent
-- [ ] Quelques scénarios d'usage end-to-end documentés/testés manuellement (ex. l'enchaînement
-      `optimize_basket` → `simulate_rebalance` décrit dans AGENTS.md)
+- [ ] `src/agent/` implementation: LangChain agent, MCP client, Azure OpenAI configuration
+- [ ] The agent follows the behavior contract in AGENTS.md (grounding in tool calls,
+      clarifying questions, faithful reporting of tool errors)
+- [ ] `web/` chat panel wired to the agent
+- [ ] A few end-to-end usage scenarios documented/tested manually (e.g. the
+      `optimize_basket` → `simulate_rebalance` sequence described in AGENTS.md)
 
-**Statut : ⬜ À faire**
+**Status: ⬜ To do**
 
-## Phase 4 — Évaluation
+## Phase 4 — Evaluation
 
-**Objectif :** évaluer automatiquement la justesse des appels d'outils et la qualité des
-réponses de l'agent, en écho à l'usage de `ragas` en production chez Amundi.
+**Objective:** automatically evaluate the correctness of the agent's tool calls and the quality
+of its answers.
 
-- [ ] Harnais d'évaluation dans `eval/` (`deepeval` et/ou `ragas`)
-- [ ] Cas de test dérivés directement du contrat d'AGENTS.md (tool-calling correctness,
-      fidélité de la réponse en langage naturel au résultat du tool)
-- [ ] Scripts d'éval dans `scripts/llm/`, appelés par le harnais `eval/`
-- [ ] Premier rapport/metrics baseline sur l'agent de la Phase 3
+- [ ] Evaluation harness in `eval/` (`deepeval` and/or `ragas`)
+- [ ] Test cases derived directly from the AGENTS.md contract (tool-calling correctness,
+      faithfulness of the natural-language answer to the tool result)
+- [ ] Eval scripts in `scripts/llm/`, called by the `eval/` harness
+- [ ] First baseline report/metrics on the Phase 3 agent
 
-**Statut : ⬜ À faire**
+**Status: ⬜ To do**
 
-## Phase 5 — Productionisation
+## Phase 5 — Productionization
 
-**Objectif :** rendre le projet déployable et durcir le pipeline ; bonus WASM optionnel.
+**Objective:** make the project deployable and harden the pipeline; optional WASM bonus.
 
-- [ ] Dockerfiles pour `mcp-server`, `web`, `agent` ; activation des services commentés dans
+- [ ] Dockerfiles for `mcp-server`, `web`, `agent`; enable the commented-out services in
       `docker-compose.yml`
-- [ ] Durcissement CI (lockfiles committés, caching, éventuellement build/push d'image)
-- [ ] README mis à jour avec des instructions de lancement via Docker
-- [ ] *(Bonus, optionnel)* compilation d'une partie de `engine` en WASM pour du recalcul
-      interactif côté navigateur, per la section "bonus futur" du README
+- [ ] CI hardening (committed lockfiles, caching, possibly image build/push)
+- [ ] README updated with Docker launch instructions
+- [ ] *(Bonus, optional)* compile part of `engine` to WASM for interactive in-browser
+      recalculation
 
-**Statut : ⬜ À faire**
+**Status: ⬜ To do**
