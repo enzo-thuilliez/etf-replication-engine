@@ -1,8 +1,8 @@
 # pre-commit hooks for this repo (Rust workspace + Python package + web/ TS app).
 # Install: `uv run pre-commit install` (after adding pre-commit to the dev deps / installing it).
 #
-# Rust and web hooks run via `language: system`, so `cargo` and `npm` must be available on PATH
-# and `web/node_modules` installed (`npm install` in web/) for the web hooks to work.
+# Rust and web hooks run via `language: system`, so `cargo` and `pnpm` must be available on PATH
+# and `web/node_modules` installed (`pnpm install` in web/) for the web hooks to work.
 
 repos:
   - repo: local
@@ -32,14 +32,14 @@ repos:
     hooks:
       - id: eslint
         name: eslint (web/)
-        entry: bash -c 'cd web && npm run lint'
+        entry: bash -c 'cd web && pnpm run lint'
         language: system
         files: ^web/.*\.(ts|tsx)$
         pass_filenames: false
 
       - id: prettier
         name: prettier (web/)
-        entry: bash -c 'cd web && npx prettier --check .'
+        entry: bash -c 'cd web && pnpm exec prettier --check .'
         language: system
         files: ^web/
         pass_filenames: false

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(cargo build:*)",
+      "Bash(cargo check:*)",
+      "Bash(cargo test:*)",
+      "Bash(cargo fmt:*)",
+      "Bash(cargo clippy:*)",
+      "Bash(cargo run:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm run:*)",
+      "Bash(pnpm -C web:*)",
+      "Bash(make:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)",
+      "Bash(git push -u origin feat/*)",
+      "Bash(git push -u origin fix/*)",
+      "Bash(git push -u origin chore/*)",
+      "Bash(git push -u origin docs/*)",
+      "Bash(gh pr create:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(git push *--force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * -f*)",
+      "Bash(git push *+*)",
+      "Bash(git push * master)",
+      "Bash(git push *:master*)"
+    ]
+  }
+}

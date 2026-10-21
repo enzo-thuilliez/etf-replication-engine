@@ -11,6 +11,33 @@ same expectations. See [PROJECT.md](PROJECT.md) for the domain background behind
 docstrings, commit messages, tool descriptions, and error messages. This holds even when the
 person asking for the change writes in another language.
 
+## Workflow for coding agents
+
+Humans: the same rules are in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+- **Never commit or push to `master`.** One issue → one branch (`feat/`, `fix/`, `chore/` or
+  `docs/` plus a short slug) → one PR. CI green, then squash merge by the product owner.
+- **Start**: read the issue, every issue in its Dependencies, and the
+  [docs/SPECS.md](docs/SPECS.md) / AGENTS.md sections it cites. If a dependency is still open,
+  stop and say so.
+- **Scope**: docs/SPECS.md is the v0 boundary. Anything in its §5, or not in the issue's
+  Acceptance, goes under "Left for later" in the PR body, not in the code.
+- **PR body**: first line `Closes #N`, or `Part of #N` when the PR is one step. Then What, How,
+  Tests, Left for later.
+- **Commits**: conventional, `type(scope): lowercase summary`. Scopes: `engine`, `mcp`, `web`,
+  `agent`, `eval`, `data`, `docs`, `ci`, `deps`, `repo`.
+- **CHANGELOG**: one bullet under `Unreleased` in [CHANGELOG.md](CHANGELOG.md), added in its
+  own last commit. Never edit existing bullets.
+- **Conflicts**: merge `master` into the branch. Never rebase, never force push (denied by
+  `.claude/settings.json`).
+- **GitHub**: use `gh api` (REST) for issues and PRs.
+- **Before pushing**: `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets --
+  -D warnings`, `cargo test --workspace`, plus `uv run ruff check . && uv run pytest` if Python
+  changed and `pnpm -C web run lint && pnpm -C web run build` if `web/` changed.
+- **Decisions and contracts**: a decision with trade-offs gets an ADR in
+  [DECISIONS.md](DECISIONS.md). A contract change updates AGENTS.md and/or docs/SPECS.md in the
+  same PR.
+
 ## Design principles
 
 1. **Tools are the only source of numbers.** The agent must never compute, estimate, or restate

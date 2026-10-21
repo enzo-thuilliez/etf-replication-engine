@@ -16,12 +16,12 @@ lint: ## Lint everything (Rust, Python, web)
 	cargo clippy --workspace --all-targets -- -D warnings
 	cargo fmt --all -- --check
 	uv run ruff check .
-	cd web && npm run lint
+	cd web && pnpm run lint
 
 fmt: ## Auto-format everything
 	cargo fmt --all
 	uv run ruff format .
-	cd web && npx prettier --write .
+	cd web && pnpm exec prettier --write .
 
 run-engine: ## Run the engine crate directly (dev/debug entrypoint, once implemented)
 	cargo run -p engine
@@ -30,7 +30,7 @@ run-mcp: ## Run the MCP server (+ axum API)
 	cargo run -p mcp-server
 
 run-web: ## Run the web dashboard (Vite dev server)
-	cd web && npm run dev
+	cd web && pnpm run dev
 
 run-agent: ## Run the LangChain agent
 	uv run python -m agent

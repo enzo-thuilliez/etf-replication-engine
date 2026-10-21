@@ -9,9 +9,9 @@ LLM agent, with a React dashboard. See [README.md](README.md) for the pitch and
 [PROJECT.md](PROJECT.md) for the domain problem. See [AGENTS.md](AGENTS.md) for the MCP tool /
 agent interface contract — treat it as the spec when implementing tools or agent logic.
 
-**Current stage: scaffolding only.** There is no optimization logic, no MCP tools, and no agent
-implementation yet. Do not assume any of the business logic described in PROJECT.md or AGENTS.md
-already exists in code — check before referencing a function, tool, or type as if it's real.
+**Current stage: Phase 1 (engine + MCP tools MVP), see [ROADMAP.md](ROADMAP.md).** Do not
+assume any of the business logic described in PROJECT.md or AGENTS.md already exists in code —
+check before referencing a function, tool, or type as if it's real.
 
 ## Repository layout
 
@@ -29,13 +29,13 @@ This is a polyglot monorepo, not a single-language project:
   by hand.
 - `src/agent/` — Python package (src-layout, managed with `uv`, not pip/poetry). LangChain +
   Azure OpenAI agent that consumes `mcp-server` as an MCP client.
-- `eval/` — agent evaluation (deepeval/ragas). Phase 2+, after the agent exists.
+- `eval/` — agent evaluation (deepeval/ragas). Phase 4, after the agent exists.
 - `scripts/llm/` — utility scripts, including LLM-calling eval scripts.
 - `notebook/` — exploratory Jupyter notebooks. Not production code; fine to be messy, but don't
   import from here into `src/agent/` or `engine/`.
 - `data/`, `db/` — local dev data and SQLite files. Contents are gitignored; only `.gitkeep`
   placeholders are tracked.
-- `docs/` — architecture notes and technical specs (`docs/SPECS.md`, forthcoming).
+- `docs/` — architecture notes and technical specs (`docs/SPECS.md`).
 - `tests/` — cross-stack integration tests and Python tests. Rust unit/integration tests stay
   inside their own crate (`engine/tests/`, `mcp-server/tests/`), per Rust convention — don't put
   Rust tests here.
@@ -61,7 +61,8 @@ cargo test
 cargo clippy --workspace --all-targets
 
 # Web
-cd web && npm install && npm run dev
+pnpm -C web install
+pnpm -C web run dev
 
 # Python agent
 uv sync
@@ -79,3 +80,13 @@ make help
   to this, not the other way around; if implementation needs to diverge from the contract,
   update AGENTS.md in the same change.
 - **docs/** — technical architecture and specs, filled in as the corresponding phase is built.
+
+## Claude Code notes
+
+- `.claude/settings.json` allows the cargo/uv/pnpm/make build and test commands, local git,
+  `git push -u origin` for `feat/`, `fix/`, `chore/` and `docs/` branches, and `gh pr create`.
+  Pushes to `master`, force pushes and `rm -rf` are denied.
+- Project allow rules only load once the workspace is trusted: run `claude` interactively in
+  the repo and accept the trust dialog. Until then only the deny rules apply.
+- Follow the issue → branch → PR workflow in
+  [AGENTS.md](AGENTS.md#workflow-for-coding-agents).
