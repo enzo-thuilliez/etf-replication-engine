@@ -3,6 +3,7 @@ name = "engine"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+publish = false
 description = "Core optimization engine: index-replication basket optimization, tracking-error computation, and rebalance simulation under transaction-cost constraints."
 
 [lib]
@@ -17,3 +18,6 @@ path = "src/main.rs"
 [dependencies]
 # TODO: add once optimization logic lands — see PROJECT.md and docs/SPECS.md (forthcoming).
 # good_lp = { version = "1", features = ["highs"] }
+
+[lints]
+workspace = true

@@ -14,8 +14,8 @@
 
 ## Checklist
 
-- [ ] Conventional commit title (`feat(engine): …`, `fix(mcp): …`)
-- [ ] `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings`,
+- [ ] Conventional commit title (`feat(engine): …`, `fix(mcp): …`): CI checks it, and it becomes the squash commit
+- [ ] `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings` (pedantic),
       `cargo test --workspace` pass
 - [ ] `uv run ruff check . && uv run pytest` pass (if Python touched)
 - [ ] `pnpm -C web run lint && pnpm -C web run build` pass (if web touched)

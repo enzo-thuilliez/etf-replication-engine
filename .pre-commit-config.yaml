@@ -1,10 +1,31 @@
 # pre-commit hooks for this repo (Rust workspace + Python package + web/ TS app).
-# Install: `uv run pre-commit install` (after adding pre-commit to the dev deps / installing it).
+# Install: `pre-commit install` (installs both the pre-commit and the commit-msg stages).
 #
 # Rust and web hooks run via `language: system`, so `cargo` and `pnpm` must be available on PATH
 # and `web/node_modules` installed (`pnpm install` in web/) for the web hooks to work.
 
+default_install_hook_types: [pre-commit, commit-msg]
+
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+      - id: detect-private-key
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.28.0
+    hooks:
+      # Uses the gitleaks binary installed by my-starter-kit's install.sh (no Go toolchain needed).
+      - id: gitleaks-system
+        pass_filenames: false
+
   - repo: local
     hooks:
       - id: cargo-fmt
@@ -43,3 +64,9 @@ repos:
         language: system
         files: ^web/
         pass_filenames: false
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]

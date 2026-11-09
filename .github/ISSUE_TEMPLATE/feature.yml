@@ -1,0 +1,43 @@
+name: Feature
+description: A scoped piece of work for the engine, MCP server, web, agent or eval
+title: "feat(scope): "
+labels: ["type:feat"]
+body:
+  - type: markdown
+    attributes:
+      value: Add one or more `area:*` labels, one `priority:*` label and the milestone of its roadmap phase.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should exist once this is done, in one or two sentences.
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Spec reference
+      description: docs/SPECS.md and/or AGENTS.md sections this implements.
+      placeholder: "SPECS §2 simulate_rebalance"
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Issues that must be closed first, or "None".
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance
+      value: |
+        - [ ]
+        - [ ] cargo fmt, clippy and cargo test pass
+        - [ ] CHANGELOG bullet under Unreleased
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: docs/SPECS.md §5 is out of v0 by default.
