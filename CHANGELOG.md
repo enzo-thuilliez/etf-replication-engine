@@ -11,3 +11,5 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Contribution workflow: issue/PR templates, CONTRIBUTING, CHANGELOG, DECISIONS, Claude Code
   permissions.
+- Repo tooling aligned with my other repos: SHA-pinned actions, `ci-pass`, cargo-deny, clippy
+  pedantic, PR-title lint, gitleaks, Dependabot, issue forms and labels as code.
