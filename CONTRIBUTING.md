@@ -49,14 +49,14 @@ pnpm -C web install
 | `make help`       | List every target                                         |
 
 CI runs the Rust job (fmt, clippy, build, test), the Python job (ruff, pytest) and the web job
-(lint, build) on every push to `master` and every PR.
+(lint, build) on every push to `main` and every PR.
 
 ## Workflow
 
 1. Pick an issue, or open one with the Feature or Bug template. Read the issues listed under
    its Dependencies; if one is still open, the issue isn't ready.
-2. Branch from `master`: `feat/<short-slug>`, `fix/…`, `chore/…` or `docs/…`. One issue, one
-   branch, one PR.
+2. Branch from `main` as `<type>/<issue>-<short-slug>`, e.g. `feat/5-optimize-basket-lp`.
+   One issue, one branch, one PR.
 3. Stay inside [docs/SPECS.md](docs/SPECS.md). It is the v0 boundary: anything in its §5, or
    not in the issue's Acceptance, goes under "Left for later" in the PR body, not in the code.
 4. Commit with [Conventional Commits](https://www.conventionalcommits.org/):
@@ -66,16 +66,16 @@ CI runs the Rust job (fmt, clippy, build, test), the Python job (ruff, pytest) a
    Never edit existing bullets.
 6. Before pushing: `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets --
    -D warnings`, `cargo test --workspace`, plus the Python or web checks if you touched them.
-7. Open a PR against `master` using the template. Its first line is `Closes #N` (or
+7. Open a PR against `main` using the template. Its first line is `Closes #N` (or
    `Part of #N` when the PR is one step of the issue).
-8. If `master` moved, merge it into your branch. Never rebase, never force push.
-9. Once CI is green, the product owner squash-merges. Nobody pushes to `master` directly.
+8. If `main` moved, merge it into your branch. Never rebase, never force push.
+9. Once CI is green, the product owner squash-merges. Nobody pushes to `main` directly.
 
 ## Using Claude Code
 
 The repo ships project permissions in `.claude/settings.json`. Claude Code ignores their
 allow rules until you trust the workspace: run `claude` once in the repo and accept the
-trust dialog. Deny rules (no `rm -rf`, no force pushes, no pushes to `master`) apply either
+trust dialog. Deny rules (no `rm -rf`, no force pushes, no pushes to `main`) apply either
 way.
 
 ## Docs to keep in sync

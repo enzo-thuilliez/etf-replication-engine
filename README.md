@@ -1,9 +1,17 @@
+<div align="center">
+
 # ETF Replication Engine
 
 **Track an index with fewer trades. A Rust optimizer, driven by an LLM agent over MCP.**
 
 [![CI](https://github.com/enzo-thuilliez/etf-replication-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/enzo-thuilliez/etf-replication-engine/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-111?style=flat-square)](LICENSE)
+![Rust](https://img.shields.io/badge/engine-Rust%20%2B%20HiGHS-111?style=flat-square)
+![MCP](https://img.shields.io/badge/tools-MCP-111?style=flat-square)
+
+[What it does](#what-it-does) · [How it works](#how-it-works) · [Stack](#stack) · [Development](#development) · [Roadmap](ROADMAP.md)
+
+</div>
 
 An ETF has to hold a basket that behaves like its benchmark index. Holding every constituent
 at exact weight is expensive, and every rebalance costs money in spreads and commissions. The
@@ -30,14 +38,11 @@ The domain problem is laid out in [PROJECT.md](PROJECT.md). The tool contract is
 
 ## How it works
 
-```text
-  LLM agent ──── MCP ────┐
-  (Python)               ▼
-                     mcp-server ───► engine
-                    (rmcp + axum)    (Rust, good_lp / HiGHS)
-                         ▲
-  Web dashboard ─ HTTP ──┘
-  (React)
+```mermaid
+flowchart LR
+    agent["LLM agent<br/>Python · LangChain"] -- "MCP" --> server["mcp-server<br/>rmcp + axum"]
+    web["Web dashboard<br/>React"] -- "HTTP" --> server
+    server --> engine["engine<br/>Rust · good_lp / HiGHS"]
 ```
 
 1. `engine` is a pure Rust library holding all the optimization logic, solved as an LP/MIP
@@ -65,13 +70,14 @@ Requires Rust stable, Node 22 with pnpm, and Python 3.11+ with `uv`.
 ```sh
 make build      # cargo build --workspace
 make test       # Rust + Python tests
-make lint       # clippy, rustfmt, ruff, eslint
+make lint       # clippy (pedantic), rustfmt, ruff, eslint
 make run-mcp    # MCP server + HTTP API
 make run-web    # dashboard dev server
 make run-agent  # agent
 ```
 
-`make help` lists every target.
+`make help` lists every target. Humans and coding agents follow the same workflow:
+[AGENTS.md](AGENTS.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Repository layout
 
