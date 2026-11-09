@@ -1,0 +1,40 @@
+name: Bug report
+description: A tool, route or check returns the wrong thing
+title: "fix(scope): "
+labels: ["type:fix"]
+body:
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+      description: Cite AGENTS.md or docs/SPECS.md if the contract says so.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      value: "1. "
+    validations:
+      required: true
+  - type: input
+    id: tool
+    attributes:
+      label: Tool or route called
+      placeholder: "optimize_basket, compute_tracking_error, simulate_rebalance, ..."
+  - type: textarea
+    id: input
+    attributes:
+      label: Input JSON
+      render: json
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "rustc --version, OS (Linux / macOS / Windows / WSL)"
