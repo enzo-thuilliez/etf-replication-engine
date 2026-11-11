@@ -13,3 +13,7 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   permissions.
 - Repo tooling aligned with my other repos: SHA-pinned actions, `ci-pass`, cargo-deny, clippy
   pedantic, PR-title lint, gitleaks, Dependabot, issue forms and labels as code.
+
+### Changed
+
+- CI: docs built with warnings denied, README diagram check, and an optional agent PR review.
