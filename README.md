@@ -43,6 +43,10 @@ flowchart LR
     agent["LLM agent<br/>Python · LangChain"] -- "MCP" --> server["mcp-server<br/>rmcp + axum"]
     web["Web dashboard<br/>React"] -- "HTTP" --> server
     server --> engine["engine<br/>Rust · good_lp / HiGHS"]
+    %% agent: src/agent
+    %% web: web/src
+    %% server: mcp-server/src
+    %% engine: engine/src
 ```
 
 1. `engine` is a pure Rust library holding all the optimization logic, solved as an LP/MIP

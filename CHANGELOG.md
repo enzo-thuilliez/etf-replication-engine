@@ -19,3 +19,4 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - CI: docs built with warnings denied, README diagram check, and an optional agent PR review.
+- README architecture diagram linked to the code with `%% node: path` comments.
