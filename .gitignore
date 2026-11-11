@@ -41,3 +41,12 @@ Thumbs.db
 
 # --- Notebooks ---
 .ipynb_checkpoints/
+
+# --- Local agent artifacts (regenerated, never committed) ---
+.gitnexus/
+graphify-out/
+floorplan/
+CLAUDE.local.md
+
+# --- Rust coverage ---
+*.profraw
