@@ -31,6 +31,10 @@ jobs:
       - run: cargo clippy --workspace --all-targets
       - run: cargo build --workspace
       - run: cargo test --workspace
+      - name: Docs
+        run: cargo doc --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
 
   cargo-deny:
     name: cargo-deny (licences, advisories)
@@ -69,11 +73,18 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run build
 
+  diagram:
+    name: diagram (README matches the code)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 .github/scripts/check-diagram.py README.md
+
   # The one check branch protection requires: green only if every job above is.
   ci-pass:
     name: ci-pass
     if: always()
-    needs: [rust, cargo-deny, python, web]
+    needs: [rust, cargo-deny, python, web, diagram]
     runs-on: ubuntu-latest
     steps:
       - name: Check that every CI job passed

@@ -15,3 +15,7 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   pedantic, PR-title lint, gitleaks, Dependabot, issue forms and labels as code.
 - Claude Code hooks (secret protection, checks after each edit) and a dev container, from
   my-starter-kit v0.3.
+
+### Changed
+
+- CI: docs built with warnings denied, README diagram check, and an optional agent PR review.
